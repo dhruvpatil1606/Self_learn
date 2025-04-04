@@ -247,7 +247,7 @@ int main()
             cout << "Enter data to be deleted : ";
             cin >> data;
             if (delete_node(head, data)) {
-                cout << "Data is deleted.\n";
+                cout << "Data is deleted.";
                 // Remove the deleted data from vec
                 for (auto it = vec.begin(); it != vec.end(); ++it) {
                     if (*it == data) {
@@ -292,6 +292,7 @@ int main()
             cout << "Please enter a valid option.\n";
             break;
         }
+        cout<<"\n";
     }
 
     return 0;
