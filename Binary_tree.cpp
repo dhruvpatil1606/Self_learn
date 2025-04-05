@@ -187,6 +187,15 @@ bool delete_node(Node *&root, int data) {
     return leftDeleted || rightDeleted;
 }
 
+void display_in_ordered_traversal(Node* head)
+{
+    if(head==NULL) return;
+
+    display_in_ordered_traversal(head->left);
+    cout<<head->data<<" ";
+    display_in_ordered_traversal(head->right);
+}
+
 int main()
 {
     struct Node *head = NULL;
@@ -196,7 +205,7 @@ int main()
         cout << "1. Add a node\n";
         cout << "2. Update a node\n";
         cout << "3. Delete a node\n";
-        // cout << "4. Display a Binary Tree in \" In_ordered traversal \"\n";
+        cout << "4. Display a Binary Tree in \" In_ordered traversal \"\n";
         // cout << "5. Display a Binary Tree in \" Pre_ordered traversal \"\n";
         // cout << "6. Display a Binary Tree in \" Post_ordered traversal \"\n";
         // cout << "7. Display a Binary Tree in \" Level_ordered traversal \"\n";
@@ -266,7 +275,7 @@ int main()
             break;
 
         case 4:
-            // display_in_ordered_traversal(head);
+            display_in_ordered_traversal(head);
             cout << "\n";
             break;
 
