@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include<queue> //for level order traversal
+
 
 using namespace std;
 
@@ -214,6 +216,29 @@ void display_post_ordered_traversal(Node* head)
     cout<<head->data<<" ";
 }
 
+void display_level_ordered_traversal(Node *head)
+{
+    queue<Node*> q;
+    q.push(head);
+
+    while(!q.empty())
+    {
+        Node *curr=q.front();
+        q.pop();
+
+        cout<<curr->data<<" ";
+        if(curr->left!=NULL)
+        {
+            q.push(curr->left);
+        }
+        if(curr->right!=NULL)
+        {
+            q.push(curr->right);
+        }
+    }
+
+}
+
 int main()
 {
     struct Node *head = NULL;
@@ -226,7 +251,7 @@ int main()
         cout << "4. Display a Binary Tree in \" In_ordered traversal \"\n";
         cout << "5. Display a Binary Tree in \" Pre_ordered traversal \"\n";
         cout << "6. Display a Binary Tree in \" Post_ordered traversal \"\n";
-        // cout << "7. Display a Binary Tree in \" Level_ordered traversal \"\n";
+        cout << "7. Display a Binary Tree in \" Level_ordered traversal \"\n";
         cout << "8. Exit\n";
         int option;
         cout << "Choose Option : ";
@@ -308,7 +333,7 @@ int main()
             break;
 
         case 7:
-            // display_level_ordered_traversal(head);
+            display_level_ordered_traversal(head);
             cout << "\n";
             break;
 
