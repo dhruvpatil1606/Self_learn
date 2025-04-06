@@ -205,6 +205,15 @@ void display_pre_ordered_traversal(Node* head)
     display_pre_ordered_traversal(head->right);
 }
 
+void display_post_ordered_traversal(Node* head)
+{
+    if(head==NULL) return;
+
+    display_post_ordered_traversal(head->left);
+    display_post_ordered_traversal(head->right);
+    cout<<head->data<<" ";
+}
+
 int main()
 {
     struct Node *head = NULL;
@@ -216,7 +225,7 @@ int main()
         cout << "3. Delete a node\n";
         cout << "4. Display a Binary Tree in \" In_ordered traversal \"\n";
         cout << "5. Display a Binary Tree in \" Pre_ordered traversal \"\n";
-        // cout << "6. Display a Binary Tree in \" Post_ordered traversal \"\n";
+        cout << "6. Display a Binary Tree in \" Post_ordered traversal \"\n";
         // cout << "7. Display a Binary Tree in \" Level_ordered traversal \"\n";
         cout << "8. Exit\n";
         int option;
@@ -294,7 +303,7 @@ int main()
             break;
 
         case 6:
-            // display_post_ordered_traversal(head);
+            display_post_ordered_traversal(head);
             cout << "\n";
             break;
 
