@@ -1,11 +1,11 @@
 #include <iostream>
-#include <vector>
+#include <vector> //for storing nodes data, help user to see exist value
 #include<queue> //for level order traversal
 
 
 using namespace std;
 
-struct Node
+struct Node // Genral binary tree structer
 {
     int data;
     struct Node *left;
@@ -21,14 +21,14 @@ bool find_and_add(Node *&head, int value, int data, char side)
     }
     if (head->data == value)
     {
-        if (side == 'l')
+        if (side == 'l') //adding data to left side
         {
             head->left = new Node();
             head->left->data = data;
             head->left->left = NULL;
             head->left->right = NULL;
         }
-        if (side == 'r')
+        if (side == 'r') //adding data to right side
         {
             head->right = new Node();
             head->right->data = data;
@@ -58,7 +58,8 @@ void add(Node *&head, int data, char side, vector<int> &vec, int value)
         return;
     }
 
-    if (find_and_add(head, value, data, side))
+    // function for adding a data and check if it is unique or not
+    if (find_and_add(head, value, data, side)) 
     {
         cout << "Data is inserted.\n";
         vec.push_back(data);
@@ -205,6 +206,7 @@ bool delete_node(Node *&root, int data) {
     return leftDeleted || rightDeleted;
 }
 
+//function for in order traversal
 void display_in_ordered_traversal(Node* head)
 {
     if(head==NULL) return;
@@ -214,6 +216,7 @@ void display_in_ordered_traversal(Node* head)
     display_in_ordered_traversal(head->right);
 }
 
+//function for pre order traversal
 void display_pre_ordered_traversal(Node* head)
 {
     if(head==NULL) return;
@@ -223,6 +226,7 @@ void display_pre_ordered_traversal(Node* head)
     display_pre_ordered_traversal(head->right);
 }
 
+//function for post order traversal
 void display_post_ordered_traversal(Node* head)
 {
     if(head==NULL) return;
@@ -232,6 +236,7 @@ void display_post_ordered_traversal(Node* head)
     cout<<head->data<<" ";
 }
 
+//function for level order traversal
 void display_level_ordered_traversal(Node *head)
 {
     if(head==NULL) return;
@@ -256,6 +261,7 @@ void display_level_ordered_traversal(Node *head)
 
 }
 
+//main function
 int main()
 {
     struct Node *head = NULL;
@@ -294,7 +300,7 @@ int main()
             if (flag == true)
                 break;
             char side; // right or left
-            if (vec.size() != 0)
+            if (vec.size() != 0) //no need for root data to check sides
             {
                 cout << "Which node should be parent of this data? ";
                 cin >> value;
@@ -302,6 +308,7 @@ int main()
                 cin >> side;
             }
             add(head, data, side, vec, value);
+            //display present nodes to user
             for (int i = 0; i < vec.size(); i++)
             {
                 cout << vec[i] << "\t";
@@ -315,18 +322,18 @@ int main()
             cout<<"Select Data to be update : ";
             cin>>data;
             cout<<"Enter new data : ";
-            cin>>update_data;
+            cin>>update_data;            
             if(update(head,update_data,data))
             {
                 cout<<"Data is updatetd.\n";
                 for (int i = 0; i < vec.size(); i++) {
                     if(vec[i]==data)
                     {
-                        vec[i]=update_data;
+                        vec[i]=update_data; // change data in vector also, which has been updated in BT
                         break;
                     }
                 }
-                // Optional: Display updated vector
+                //display present nodes to user
                 for (int i = 0; i < vec.size(); i++) {
                     cout << vec[i] << "\t";
                 }
@@ -349,7 +356,7 @@ int main()
                         break;
                     }
                 }
-                // Optional: Display updated vector
+                //display present nodes to user
                 for (int i = 0; i < vec.size(); i++) {
                     cout << vec[i] << "\t";
                 }
@@ -358,7 +365,7 @@ int main()
                 cout << "Data not found.\n";
             }
             break;
-
+        
         case 4:
             display_in_ordered_traversal(head);
             cout << "\n";
@@ -380,7 +387,7 @@ int main()
             break;
 
         case 8:
-            return 0;
+            return 0; //exit program
 
         default:
             cout << "Please enter a valid option.\n";
