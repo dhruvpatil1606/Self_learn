@@ -69,6 +69,22 @@ void add(Node *&head, int data, char side, vector<int> &vec, int value)
     }
 }
 
+//update node
+bool update(Node *&head,int update_data,int data)
+{
+    if(head==NULL) return false;
+    if(data==head->data)
+    {
+        head->data=update_data;
+        return true;
+    }
+
+    bool left_result=update(head->left,update_data,data);
+    bool right_result=update(head->right,update_data,data);
+
+    return left_result || right_result;
+}
+
 // funtion for deleting a node
 
 bool delete_node(Node *&root, int data) {
@@ -218,6 +234,7 @@ void display_post_ordered_traversal(Node* head)
 
 void display_level_ordered_traversal(Node *head)
 {
+    if(head==NULL) return;
     queue<Node*> q;
     q.push(head);
 
@@ -294,12 +311,37 @@ int main()
 
         case 2:
             // update
+            int update_data;
+            cout<<"Select Data to be update : ";
+            cin>>data;
+            cout<<"Enter new data : ";
+            cin>>update_data;
+            if(update(head,update_data,data))
+            {
+                cout<<"Data is updatetd.\n";
+                for (int i = 0; i < vec.size(); i++) {
+                    if(vec[i]==data)
+                    {
+                        vec[i]=update_data;
+                        break;
+                    }
+                }
+                // Optional: Display updated vector
+                for (int i = 0; i < vec.size(); i++) {
+                    cout << vec[i] << "\t";
+                }
+                cout << endl;
+            }
+            else{
+                cout<<"Data not found. Update operation failed.\n";
+            }
+            break;
 
         case 3:
             cout << "Enter data to be deleted : ";
             cin >> data;
             if (delete_node(head, data)) {
-                cout << "Data is deleted.";
+                cout << "Data is deleted.\n";
                 // Remove the deleted data from vec
                 for (auto it = vec.begin(); it != vec.end(); ++it) {
                     if (*it == data) {
