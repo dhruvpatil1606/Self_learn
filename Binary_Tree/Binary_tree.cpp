@@ -206,6 +206,18 @@ bool delete_node(Node *&root, int data) {
     return leftDeleted || rightDeleted;
 }
 
+bool check_node(Node *&head,int data)
+{
+    if(head==NULL) return false;
+
+    if(head->data==data) return true;
+
+    bool left_tree=check_node(head->left,data);
+    bool right_tree=check_node(head->right,data);
+
+    return left_tree || right_tree;
+}
+
 //function for in order traversal
 void display_in_ordered_traversal(Node* head)
 {
@@ -271,11 +283,12 @@ int main()
         cout << "1. Add a node\n";
         cout << "2. Update a node\n";
         cout << "3. Delete a node\n";
-        cout << "4. Display a Binary Tree in \" In_ordered traversal \"\n";
-        cout << "5. Display a Binary Tree in \" Pre_ordered traversal \"\n";
-        cout << "6. Display a Binary Tree in \" Post_ordered traversal \"\n";
-        cout << "7. Display a Binary Tree in \" Level_ordered traversal \"\n";
-        cout << "8. Exit\n";
+        cout << "4. Check if node exist or not\n";
+        cout << "5. Display a Binary Tree in \" In_ordered traversal \"\n";
+        cout << "6. Display a Binary Tree in \" Pre_ordered traversal \"\n";
+        cout << "7. Display a Binary Tree in \" Post_ordered traversal \"\n";
+        cout << "8. Display a Binary Tree in \" Level_ordered traversal \"\n";
+        cout << "9. Exit\n";
         int option;
         cout << "Choose Option : ";
         cin >> option;
@@ -283,7 +296,7 @@ int main()
         bool flag;
         switch (option)
         {
-        case 1:
+        case 1: //insert data node
             int value;            
             cout << "Enter a data : ";
             cin >> data;
@@ -317,7 +330,7 @@ int main()
             break;
 
         case 2:
-            // update
+            // update data node
             int update_data;
             cout<<"Select Data to be update : ";
             cin>>data;
@@ -344,7 +357,7 @@ int main()
             }
             break;
 
-        case 3:
+        case 3: //delete node
             cout << "Enter data to be deleted : ";
             cin >> data;
             if (delete_node(head, data)) {
@@ -365,28 +378,39 @@ int main()
                 cout << "Data not found.\n";
             }
             break;
+
+        case 4: //check node
+            cout<<"Enter a data to check : ";
+            cin>>data;
+            if(check_node(head,data))
+            {
+                cout<<"Data with this node is present.\n";
+            }
+            else{
+                cout<<"Data with this node is not present.\n";
+            }
         
-        case 4:
+        case 5: //in order traversal
             display_in_ordered_traversal(head);
             cout << "\n";
             break;
 
-        case 5:
+        case 6: //pre order traversal
             display_pre_ordered_traversal(head);
             cout << "\n";
             break;
 
-        case 6:
+        case 7: //post order traversal
             display_post_ordered_traversal(head);
             cout << "\n";
             break;
 
-        case 7:
+        case 8: //level order traversal
             display_level_ordered_traversal(head);
             cout << "\n";
             break;
 
-        case 8:
+        case 9:
             return 0; //exit program
 
         default:
