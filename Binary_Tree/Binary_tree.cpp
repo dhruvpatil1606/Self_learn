@@ -1,5 +1,5 @@
 #include <iostream>
-#include <vector> //for storing nodes data, help user to see exist value
+#include <vector> //for storing nodes data, help user to see existing value
 #include<queue> //for level order traversal
 
 
@@ -87,7 +87,6 @@ bool update(Node *&head,int update_data,int data)
 }
 
 // funtion for deleting a node
-
 bool delete_node(Node *&root, int data) {
     if (root == NULL) {
         return false; // Base case: tree is empty or node not found
@@ -206,6 +205,7 @@ bool delete_node(Node *&root, int data) {
     return leftDeleted || rightDeleted;
 }
 
+//function for checking if node is exist or not
 bool check_node(Node *&head,int data)
 {
     if(head==NULL) return false;
@@ -221,8 +221,11 @@ bool check_node(Node *&head,int data)
 //function for in order traversal
 void display_in_ordered_traversal(Node* head)
 {
-    if(head==NULL) return;
-
+    if(head==NULL) 
+    {
+        cout<<"The Binary tree is empty. Insert first.";
+        return;
+    }
     display_in_ordered_traversal(head->left);
     cout<<head->data<<" ";
     display_in_ordered_traversal(head->right);
@@ -231,8 +234,11 @@ void display_in_ordered_traversal(Node* head)
 //function for pre order traversal
 void display_pre_ordered_traversal(Node* head)
 {
-    if(head==NULL) return;
-
+    if(head==NULL) 
+    {
+        cout<<"The Binary tree is empty. Insert first.";
+        return;
+    }
     cout<<head->data<<" ";
     display_pre_ordered_traversal(head->left);
     display_pre_ordered_traversal(head->right);
@@ -241,8 +247,11 @@ void display_pre_ordered_traversal(Node* head)
 //function for post order traversal
 void display_post_ordered_traversal(Node* head)
 {
-    if(head==NULL) return;
-
+    if(head==NULL) 
+    {
+        cout<<"The Binary tree is empty. Insert first.";
+        return;
+    }
     display_post_ordered_traversal(head->left);
     display_post_ordered_traversal(head->right);
     cout<<head->data<<" ";
@@ -251,7 +260,12 @@ void display_post_ordered_traversal(Node* head)
 //function for level order traversal
 void display_level_ordered_traversal(Node *head)
 {
-    if(head==NULL) return;
+    if(head==NULL) 
+    {
+        cout<<"The Binary tree is empty. Insert first.";
+        return;
+    }
+
     queue<Node*> q;
     q.push(head);
 
