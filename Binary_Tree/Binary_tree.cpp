@@ -222,8 +222,7 @@ bool check_node(Node *&head,int data)
 void display_in_ordered_traversal(Node* head)
 {
     if(head==NULL) 
-    {
-        cout<<"The Binary tree is empty. Insert first.";
+    {        
         return;
     }
     display_in_ordered_traversal(head->left);
@@ -236,7 +235,6 @@ void display_pre_ordered_traversal(Node* head)
 {
     if(head==NULL) 
     {
-        cout<<"The Binary tree is empty. Insert first.";
         return;
     }
     cout<<head->data<<" ";
@@ -249,7 +247,6 @@ void display_post_ordered_traversal(Node* head)
 {
     if(head==NULL) 
     {
-        cout<<"The Binary tree is empty. Insert first.";
         return;
     }
     display_post_ordered_traversal(head->left);
@@ -261,8 +258,7 @@ void display_post_ordered_traversal(Node* head)
 void display_level_ordered_traversal(Node *head)
 {
     if(head==NULL) 
-    {
-        cout<<"The Binary tree is empty. Insert first.";
+    {        
         return;
     }
 
@@ -403,6 +399,7 @@ int main()
             else{
                 cout<<"Data with this node is not present.\n";
             }
+            break;
         
         case 5: //in order traversal
             display_in_ordered_traversal(head);
