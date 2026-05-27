@@ -1,5 +1,6 @@
 #include <raylib.h>
 #include <iostream>
+#include<deque>
 
 using namespace std;
 
@@ -8,6 +9,56 @@ Color darkGreen = {43, 51, 24, 255};
 
 int cellSize = 30;
 int cellCount = 25;
+
+class Snake
+{
+    public:
+        deque<Vector2> body{Vector2{5,6},Vector2{6,6},Vector2{7,6}};
+        Texture2D headtexture;
+        Texture2D bodytexture;
+
+        Snake()
+        {
+                Image snakeHead = LoadImage("res/graphics/snake.png");
+                ImageResize(&snakeHead,cellSize,cellSize);
+                ImageRotate(&snakeHead,270); //270 - right , 0 - down , 90 - left , 180 - top
+                headtexture= LoadTextureFromImage(snakeHead);
+                UnloadImage(snakeHead);
+
+                Image bodyImage = LoadImage("res/graphics/body.png");
+                ImageResize(&bodyImage,cellSize,cellSize);
+                Image mask = GenImageColor(cellSize, cellSize, BLANK);
+                ImageDrawCircle(&mask, cellSize / 2, cellSize / 2, cellSize / 1.7, WHITE);
+                ImageAlphaMask(&bodyImage, mask);
+                bodytexture= LoadTextureFromImage(bodyImage);
+                
+                UnloadImage(bodyImage);
+                UnloadImage(mask);
+        }
+
+        ~Snake()
+        {
+            UnloadTexture(headtexture);
+            UnloadTexture(bodytexture);
+        }
+
+    void draw()
+    {
+        for(unsigned i=0; i<body.size(); i++)
+        {
+            float x=body[i].x;
+            float y=body[i].y;
+            if(i==body.size()-1)
+            {                
+                DrawTexture(headtexture,x*cellSize,y*cellSize,WHITE);       
+            }
+            else{                
+                DrawTexture(bodytexture,x*cellSize,y*cellSize,WHITE);                
+            }
+        }
+    }
+
+};
 
 class Food
 {
@@ -51,6 +102,7 @@ int main()
     SetTargetFPS(60);
 
     Food food = Food();
+    Snake snake = Snake();
 
     while (WindowShouldClose() == false)
     {
@@ -58,6 +110,7 @@ int main()
 
         ClearBackground(green);
         food.draw();
+        snake.draw();
 
         EndDrawing();
     }
