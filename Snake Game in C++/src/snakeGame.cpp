@@ -1,6 +1,7 @@
 #include <raylib.h>
 #include <iostream>
-#include<deque>
+#include <deque>
+#include <raymath.h>
 
 using namespace std;
 
@@ -10,66 +11,87 @@ Color darkGreen = {43, 51, 24, 255};
 int cellSize = 30;
 int cellCount = 25;
 
+double lastUpdatedTime = 0;
+
+bool eventTriggered(double interval)
+{
+    double currentTime = GetTime();
+    if (currentTime - lastUpdatedTime >= interval)
+    {
+        lastUpdatedTime = currentTime;
+        return true;
+    }
+    return false;
+}
+
 class Snake
 {
-    public:
-        deque<Vector2> body{Vector2{5,6},Vector2{6,6},Vector2{7,6}};
-        Texture2D headtexture;
-        Texture2D bodytexture;
+public:
+    deque<Vector2> body{Vector2{5, 6}, Vector2{6, 6}, Vector2{7, 6}};
+    Texture2D headtexture;
+    Texture2D bodytexture;
 
-        Snake()
-        {
-                Image snakeHead = LoadImage("res/graphics/snake.png");
-                ImageResize(&snakeHead,cellSize,cellSize);
-                ImageRotate(&snakeHead,270); //270 - right , 0 - down , 90 - left , 180 - top
-                headtexture= LoadTextureFromImage(snakeHead);
-                UnloadImage(snakeHead);
+    Vector2 directionRight = {1, 0};
 
-                Image bodyImage = LoadImage("res/graphics/body.png");
-                ImageResize(&bodyImage,cellSize,cellSize);
-                Image mask = GenImageColor(cellSize, cellSize, BLANK);
-                ImageDrawCircle(&mask, cellSize / 2, cellSize / 2, cellSize / 1.7, WHITE);
-                ImageAlphaMask(&bodyImage, mask);
-                bodytexture= LoadTextureFromImage(bodyImage);
-                
-                UnloadImage(bodyImage);
-                UnloadImage(mask);
-        }
+    Snake()
+    {
+        Image snakeHead = LoadImage("res/graphics/snake.png");
+        ImageResize(&snakeHead, cellSize, cellSize);
+        ImageRotate(&snakeHead, 270); // 270 - right , 0 - down , 90 - left , 180 - top
+        headtexture = LoadTextureFromImage(snakeHead);
+        UnloadImage(snakeHead);
 
-        ~Snake()
-        {
-            UnloadTexture(headtexture);
-            UnloadTexture(bodytexture);
-        }
+        Image bodyImage = LoadImage("res/graphics/body.png");
+        ImageResize(&bodyImage, cellSize, cellSize);
+        Image mask = GenImageColor(cellSize, cellSize, BLANK);
+        ImageDrawCircle(&mask, cellSize / 2, cellSize / 2, cellSize / 1.7, WHITE);
+        ImageAlphaMask(&bodyImage, mask);
+        bodytexture = LoadTextureFromImage(bodyImage);
+
+        UnloadImage(bodyImage);
+        UnloadImage(mask);
+    }
+
+    ~Snake()
+    {
+        UnloadTexture(headtexture);
+        UnloadTexture(bodytexture);
+    }
 
     void draw()
     {
-        for(unsigned i=0; i<body.size(); i++)
+        for (unsigned i = 0; i < body.size(); i++)
         {
-            float x=body[i].x;
-            float y=body[i].y;
-            if(i==body.size()-1)
-            {                
-                DrawTexture(headtexture,x*cellSize,y*cellSize,WHITE);       
+            float x = body[i].x;
+            float y = body[i].y;
+            if (i == body.size() - 1)
+            {
+                DrawTexture(headtexture, x * cellSize, y * cellSize, WHITE);
             }
-            else{                
-                DrawTexture(bodytexture,x*cellSize,y*cellSize,WHITE);                
+            else
+            {
+                DrawTexture(bodytexture, x * cellSize, y * cellSize, WHITE);
             }
         }
     }
 
+    void update()
+    {
+        body.pop_front();
+        body.push_back(Vector2Add(body[body.size() - 1], directionRight));
+    }
 };
 
 class Food
 {
-    public:
-        Vector2 position;
-        Texture2D texture;
+public:
+    Vector2 position;
+    Texture2D texture;
 
     Food()
     {
         Image image = LoadImage("res/graphics/food.png");
-        ImageResize(&image,cellSize,cellSize);
+        ImageResize(&image, cellSize, cellSize);
         texture = LoadTextureFromImage(image);
         UnloadImage(image);
         position = genRandomPos();
@@ -79,19 +101,18 @@ class Food
     {
         UnloadTexture(texture);
     }
-    
+
     void draw()
     {
-        DrawTexture(texture,position.x*cellSize,position.y*cellSize, WHITE);
+        DrawTexture(texture, position.x * cellSize, position.y * cellSize, WHITE);
     }
 
     Vector2 genRandomPos()
     {
-        float x = GetRandomValue(0, cellCount-1);
-        float y = GetRandomValue(0, cellCount-1);
-        return Vector2{x,y};
+        float x = GetRandomValue(0, cellCount - 1);
+        float y = GetRandomValue(0, cellCount - 1);
+        return Vector2{x, y};
     }
-
 };
 
 int main()
@@ -107,6 +128,11 @@ int main()
     while (WindowShouldClose() == false)
     {
         BeginDrawing();
+
+        if (eventTriggered(0.3))
+        {
+            snake.update();
+        }
 
         ClearBackground(green);
         food.draw();
