@@ -31,7 +31,7 @@ public:
     Texture2D headtexture;
     Texture2D bodytexture;
 
-    Vector2 directionRight = {1, 0};
+    Vector2 direction = {1, 0};
 
     Snake()
     {
@@ -78,7 +78,7 @@ public:
     void update()
     {
         body.pop_front();
-        body.push_back(Vector2Add(body[body.size() - 1], directionRight));
+        body.push_back(Vector2Add(body[body.size() - 1], direction));
     }
 };
 
@@ -132,6 +132,23 @@ int main()
         if (eventTriggered(0.3))
         {
             snake.update();
+        }
+
+        if(IsKeyPressed(KEY_UP) && snake.direction.y !=1)
+        {
+            snake.direction = {0,-1};
+        }
+        if(IsKeyPressed(KEY_DOWN) && snake.direction.y !=-1)
+        {
+            snake.direction = {0,1};
+        }
+        if(IsKeyPressed(KEY_LEFT) && snake.direction.x !=1)
+        {
+            snake.direction = {-1,0};
+        }
+        if(IsKeyPressed(KEY_RIGHT) && snake.direction.x !=-1)
+        {
+            snake.direction = {1,0};
         }
 
         ClearBackground(green);
