@@ -28,17 +28,32 @@ class Snake
 {
 public:
     deque<Vector2> body{Vector2{5, 6}, Vector2{6, 6}, Vector2{7, 6}};
-    Texture2D headtexture;
+    Texture2D headtextureUp;
+    Texture2D headtextureDown;
+    Texture2D headtextureLeft;
+    Texture2D headtextureRight;
     Texture2D bodytexture;
 
     Vector2 direction = {1, 0};
 
+    bool directionChange=true;
+
     Snake()
     {
         Image snakeHead = LoadImage("res/graphics/snake.png");
-        ImageResize(&snakeHead, cellSize, cellSize);
-        ImageRotate(&snakeHead, 270); // 270 - right , 0 - down , 90 - left , 180 - top
-        headtexture = LoadTextureFromImage(snakeHead);
+        ImageResize(&snakeHead, cellSize, cellSize);        
+        
+        headtextureDown = LoadTextureFromImage(snakeHead);
+
+        ImageRotate(&snakeHead,180);
+        headtextureUp=LoadTextureFromImage(snakeHead);
+        
+        ImageRotate(&snakeHead,90);
+        headtextureRight=LoadTextureFromImage(snakeHead);
+        
+        ImageRotate(&snakeHead,180);
+        headtextureLeft=LoadTextureFromImage(snakeHead);
+
         UnloadImage(snakeHead);
 
         Image bodyImage = LoadImage("res/graphics/body.png");
@@ -54,7 +69,10 @@ public:
 
     ~Snake()
     {
-        UnloadTexture(headtexture);
+        UnloadTexture(headtextureUp);
+        UnloadTexture(headtextureDown);
+        UnloadTexture(headtextureLeft);
+        UnloadTexture(headtextureRight);
         UnloadTexture(bodytexture);
     }
 
@@ -64,11 +82,17 @@ public:
         {
             float x = body[i].x;
             float y = body[i].y;
-            if (i == body.size() - 1)
+
+            
+
+            if (i == body.size() - 1) //head
             {
-                DrawTexture(headtexture, x * cellSize, y * cellSize, WHITE);
+                if(direction.x == -1 ) DrawTexture(headtextureLeft, x * cellSize, y * cellSize, WHITE);
+                if(direction.x == 1 ) DrawTexture(headtextureRight, x * cellSize, y * cellSize, WHITE);
+                if(direction.y == -1 ) DrawTexture(headtextureUp, x * cellSize, y * cellSize, WHITE);
+                if(direction.y == 1 ) DrawTexture(headtextureDown, x * cellSize, y * cellSize, WHITE);
             }
-            else
+            else //body
             {
                 DrawTexture(bodytexture, x * cellSize, y * cellSize, WHITE);
             }
@@ -79,6 +103,7 @@ public:
     {
         body.pop_front();
         body.push_back(Vector2Add(body[body.size() - 1], direction));
+        directionChange=true;
     }
 };
 
@@ -134,21 +159,25 @@ int main()
             snake.update();
         }
 
-        if(IsKeyPressed(KEY_UP) && snake.direction.y !=1)
+        if(IsKeyPressed(KEY_UP) && snake.direction.y !=1 && snake.directionChange)
         {
-            snake.direction = {0,-1};
+            snake.direction = {0,-1};   
+            snake.directionChange=false;
         }
-        if(IsKeyPressed(KEY_DOWN) && snake.direction.y !=-1)
+        else if(IsKeyPressed(KEY_DOWN) && snake.direction.y !=-1 && snake.directionChange)
         {
             snake.direction = {0,1};
+            snake.directionChange=false;
         }
-        if(IsKeyPressed(KEY_LEFT) && snake.direction.x !=1)
+        else if(IsKeyPressed(KEY_LEFT) && snake.direction.x !=1 && snake.directionChange)
         {
             snake.direction = {-1,0};
+            snake.directionChange=false;
         }
-        if(IsKeyPressed(KEY_RIGHT) && snake.direction.x !=-1)
+        else if(IsKeyPressed(KEY_RIGHT) && snake.direction.x !=-1 && snake.directionChange)
         {
             snake.direction = {1,0};
+            snake.directionChange=false;
         }
 
         ClearBackground(green);
