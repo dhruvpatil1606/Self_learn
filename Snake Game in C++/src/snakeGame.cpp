@@ -24,6 +24,18 @@ bool eventTriggered(double interval)
     return false;
 }
 
+bool ElementInDeque(Vector2 element, deque<Vector2> snakeBody)
+{
+    for(int i=0; i<snakeBody.size(); i++)
+    {
+        if(Vector2Equals(snakeBody[i],element))
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 class Snake
 {
 public:
@@ -113,13 +125,13 @@ public:
     Vector2 position;
     Texture2D texture;
 
-    Food()
+    Food(deque <Vector2> snakeBody)
     {
         Image image = LoadImage("res/graphics/food.png");
         ImageResize(&image, cellSize, cellSize);
         texture = LoadTextureFromImage(image);
         UnloadImage(image);
-        position = genRandomPos();
+        position = genRandomPos(snakeBody);
     }
 
     ~Food()
@@ -132,12 +144,53 @@ public:
         DrawTexture(texture, position.x * cellSize, position.y * cellSize, WHITE);
     }
 
-    Vector2 genRandomPos()
+    Vector2 genRandomCells()
     {
         float x = GetRandomValue(0, cellCount - 1);
         float y = GetRandomValue(0, cellCount - 1);
-        return Vector2{x, y};
+        return Vector2{x,y};
     }
+
+    Vector2 genRandomPos(deque <Vector2> snakeBody)
+    {
+        Vector2 position = genRandomCells();
+
+        while(ElementInDeque(position,snakeBody))
+        {
+            position=genRandomCells();
+        }
+
+        return position;
+    }
+};
+
+class Game
+{
+public:
+   Snake snake=Snake() ;
+   Food food=Food(snake.body);
+
+   void Draw()
+   {
+        snake.draw();
+        food.draw();
+   }
+
+   void Update()
+   {
+        snake.update();
+        checkCollition();
+   }
+
+   void checkCollition()
+   {
+        if(Vector2Equals(snake.body[snake.body.size()-1],food.position))
+        {
+            cout<<"Eating food.."<<endl;
+            // snake.body.push_front(DrawTexture(snake.bodytexture,snake.body[0].x*cellSize,snake.body[0].y*cellSize),WHITE);
+            food.position=food.genRandomPos(snake.body);
+        }
+   }
 };
 
 int main()
@@ -147,8 +200,7 @@ int main()
     InitWindow(cellSize * cellCount, cellSize * cellCount, "Retro Snake");
     SetTargetFPS(60);
 
-    Food food = Food();
-    Snake snake = Snake();
+    Game game=Game();
 
     while (WindowShouldClose() == false)
     {
@@ -156,33 +208,32 @@ int main()
 
         if (eventTriggered(0.3))
         {
-            snake.update();
+            game.Update();
         }
 
-        if(IsKeyPressed(KEY_UP) && snake.direction.y !=1 && snake.directionChange)
+        if(IsKeyPressed(KEY_UP) && game.snake.direction.y !=1 && game.snake.directionChange)
         {
-            snake.direction = {0,-1};   
-            snake.directionChange=false;
+            game.snake.direction = {0,-1};   
+            game.snake.directionChange=false;
         }
-        else if(IsKeyPressed(KEY_DOWN) && snake.direction.y !=-1 && snake.directionChange)
+        else if(IsKeyPressed(KEY_DOWN) && game.snake.direction.y !=-1 && game.snake.directionChange)
         {
-            snake.direction = {0,1};
-            snake.directionChange=false;
+            game.snake.direction = {0,1};
+            game.snake.directionChange=false;
         }
-        else if(IsKeyPressed(KEY_LEFT) && snake.direction.x !=1 && snake.directionChange)
+        else if(IsKeyPressed(KEY_LEFT) && game.snake.direction.x !=1 && game.snake.directionChange)
         {
-            snake.direction = {-1,0};
-            snake.directionChange=false;
+            game.snake.direction = {-1,0};
+            game.snake.directionChange=false;
         }
-        else if(IsKeyPressed(KEY_RIGHT) && snake.direction.x !=-1 && snake.directionChange)
+        else if(IsKeyPressed(KEY_RIGHT) && game.snake.direction.x !=-1 && game.snake.directionChange)
         {
-            snake.direction = {1,0};
-            snake.directionChange=false;
+            game.snake.direction = {1,0};
+            game.snake.directionChange=false;
         }
 
         ClearBackground(green);
-        food.draw();
-        snake.draw();
+        game.Draw();
 
         EndDrawing();
     }
