@@ -183,6 +183,22 @@ public:
 
     int score = 0;
 
+    Sound biteSound,wallHitSound;
+
+    Game()
+    {
+        InitAudioDevice();
+        biteSound = LoadSound("res/sounds/bite.mp3");
+        wallHitSound = LoadSound("res/sounds/wall.mp3");
+    }
+
+    ~Game()
+    {
+        UnloadSound(biteSound);
+        UnloadSound(wallHitSound);
+        CloseAudioDevice();
+    }
+
     void Draw()
     {
         snake.draw();
@@ -204,6 +220,7 @@ public:
     {
         if (Vector2Equals(snake.body[snake.body.size() - 1], food.position))
         {
+            PlaySound(biteSound);
             cout << "Eating food.." << endl;
             food.position = food.genRandomPos(snake.body);
             Vector2 bodyAdd = snake.body[0];
@@ -237,10 +254,11 @@ public:
 
     void GameOver()
     {
+        PlaySound(wallHitSound);
         snake.GameReset();
         food.position = food.genRandomPos(snake.body);
         running = false;
-        score = 0;
+        score = 0;        
     }
 };
 
