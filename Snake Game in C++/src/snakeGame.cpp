@@ -117,6 +117,12 @@ public:
         body.push_back(Vector2Add(body[body.size() - 1], direction));
         directionChange=true;
     }
+
+    void GameReset()
+    {
+        body = {Vector2{5, 6}, Vector2{6, 6}, Vector2{7, 6}};
+        direction = {1,0};
+    }
 };
 
 class Food
@@ -170,6 +176,8 @@ public:
    Snake snake=Snake() ;
    Food food=Food(snake.body);
 
+   bool running = true;
+
    void Draw()
    {
         snake.draw();
@@ -178,8 +186,13 @@ public:
 
    void Update()
    {
-       snake.update();
-       checkCollition();
+        if(running == true)
+        {
+            snake.update();
+            checkCollition();
+            checkSnakeCollitionWithScreen();
+            checkCollitionWithTail(snake.body);
+        }
    }
 
    void checkCollition()
@@ -191,6 +204,37 @@ public:
             Vector2 bodyAdd = snake.body[0];
             snake.body.push_front(bodyAdd);
         }
+   }
+
+   void checkCollitionWithTail(deque<Vector2> snakeBody)
+   {
+        for(int i=0; i<snakeBody.size()-1; i++)
+        {
+            if(Vector2Equals(snakeBody[i],snakeBody[snakeBody.size()-1]))
+            {
+                GameOver();
+            }
+        }
+
+   }
+
+   void checkSnakeCollitionWithScreen()
+   {
+        if(snake.body[snake.body.size()-1].x == cellCount || snake.body[snake.body.size()-1].x == -1)
+        {
+            GameOver();
+        }
+        if(snake.body[snake.body.size()-1].y == cellCount || snake.body[snake.body.size()-1].y == -1)
+        {
+            GameOver();
+        }
+   }
+
+   void GameOver()
+   {
+        snake.GameReset();
+        food.position=food.genRandomPos(snake.body);
+        running = false;
    }
 };
 
@@ -216,21 +260,25 @@ int main()
         {
             game.snake.direction = {0,-1};   
             game.snake.directionChange=false;
+            game.running=true;
         }
         else if(IsKeyPressed(KEY_DOWN) && game.snake.direction.y !=-1 && game.snake.directionChange)
         {
             game.snake.direction = {0,1};
             game.snake.directionChange=false;
+            game.running=true;
         }
         else if(IsKeyPressed(KEY_LEFT) && game.snake.direction.x !=1 && game.snake.directionChange)
         {
             game.snake.direction = {-1,0};
             game.snake.directionChange=false;
+            game.running=true;
         }
         else if(IsKeyPressed(KEY_RIGHT) && game.snake.direction.x !=-1 && game.snake.directionChange)
         {
             game.snake.direction = {1,0};
             game.snake.directionChange=false;
+            game.running=true;
         }
 
         ClearBackground(green);
