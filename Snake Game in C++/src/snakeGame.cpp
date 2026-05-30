@@ -178,17 +178,18 @@ public:
 
    void Update()
    {
-        snake.update();
-        checkCollition();
+       snake.update();
+       checkCollition();
    }
 
    void checkCollition()
    {
         if(Vector2Equals(snake.body[snake.body.size()-1],food.position))
         {
-            cout<<"Eating food.."<<endl;
-            // snake.body.push_front(DrawTexture(snake.bodytexture,snake.body[0].x*cellSize,snake.body[0].y*cellSize),WHITE);
+            cout<<"Eating food.."<<endl;            
             food.position=food.genRandomPos(snake.body);
+            Vector2 bodyAdd = snake.body[0];
+            snake.body.push_front(bodyAdd);
         }
    }
 };
